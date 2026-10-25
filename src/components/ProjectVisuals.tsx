@@ -161,7 +161,7 @@ const DOSSIERS = [
 function DossierVisual() {
   return (
     <div className="relative flex h-full w-full flex-col p-5 md:p-6" aria-hidden="true">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
         <span className="mono-label">CASE FILE — WORKSPACE</span>
         <span className="stamp">PLANNED · NOT BUILT</span>
       </div>
@@ -190,7 +190,7 @@ export default function ProjectVisual({ kind }: { kind: VisualKind }) {
       {kind === "pipeline" && <PipelineDiagram />}
       {kind === "planes" && <PlanesVisual />}
       {kind === "dossier" && <DossierVisual />}
-      <span className="absolute bottom-2.5 left-3 font-mono text-[0.58rem] tracking-[0.22em] text-faint">
+      <span className="absolute bottom-2.5 left-3 max-w-[85%] pr-2 font-mono text-[0.58rem] leading-tight tracking-[0.16em] text-faint">
         {kind === "pipeline" && "ANALYSIS PIPELINE — DETERMINISTIC SCHEMATIC"}
         {kind === "planes" && "DEPTH STACK — SPATIAL DISPLAY MODEL"}
         {kind === "dossier" && "SCOPE: PUBLIC-SOURCE COLLECTION ONLY"}

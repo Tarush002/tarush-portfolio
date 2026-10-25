@@ -22,9 +22,6 @@ export const SITE = {
   wordmark: "TARUSH SINGH",
   tagline: "RESEARCHING THE DIGITAL WORLD",
   eyebrow: "INDEPENDENT RESEARCH · CYBERSECURITY · AI",
-  headlinePre: "Understanding threats.",
-  headlineMain: "Investigating what others miss.",
-  headlineEm: "what others miss.",
   intro:
     "I'm Tarush Singh — an MCA Cyber Security student exploring OSINT, cyber threat intelligence, digital investigations, and AI-assisted security research.",
   status: "CURRENTLY BUILDING · SECURITY RESEARCH",
@@ -161,25 +158,30 @@ export const STACK: Capability[] = [
 
 export interface Education {
   title: string;
+  /** full degree name on first structured mention */
   field: string;
   school: string;
   detail: string;
   period: string;
+  /** short level tag for the status chip ("MASTERS" / "BACHELORS") */
+  level: string;
 }
 
 export const EDUCATION: Education[] = [
   {
     title: "MCA",
-    field: "Cyber Security",
-    school: "D Y Patil Deemed to be University",
-    detail: "School of Humanities & Sciences, Navi Mumbai",
+    field: "Master of Computer Applications · Cyber Security",
+    school: "D. Y. Patil Deemed to be University",
+    detail: "School of Humanities & Sciences · Navi Mumbai",
     period: "IN PROGRESS",
+    level: "MASTERS",
   },
   {
     title: "BCA",
-    field: "Computer Applications",
+    field: "Bachelor of Computer Applications",
     school: "University of Lucknow",
-    detail: "Bachelor of Computer Applications",
+    detail: "",
     period: "2022 – 2025",
+    level: "BACHELORS",
   },
 ];

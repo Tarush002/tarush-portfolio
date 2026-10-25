@@ -132,9 +132,10 @@ body::before {
 .display-1 {
   font-family: var(--font-sans);
   font-weight: 550;
-  font-size: clamp(2.85rem, 7vw, 6.2rem);
+  font-size: clamp(2.5rem, 7vw, 6.2rem);
   line-height: 0.99;
   letter-spacing: -0.035em;
+  text-wrap: balance;
 }
 
 .display-2 {
@@ -143,6 +144,7 @@ body::before {
   font-size: clamp(2.1rem, 4.4vw, 3.4rem);
   line-height: 1.05;
   letter-spacing: -0.03em;
+  text-wrap: balance;
 }
 
 .serif-it {
@@ -154,9 +156,7 @@ body::before {
 }
 
 .eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.85rem;
+  display: block;
   font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 500;
@@ -166,11 +166,13 @@ body::before {
 }
 .eyebrow::before {
   content: "";
+  display: inline-block;
   width: 1.6rem;
   height: 1px;
   background: var(--color-accent);
   opacity: 0.85;
-  flex: none;
+  vertical-align: 0.32em;
+  margin-right: 0.85rem;
 }
 
 .mono-label {
@@ -229,7 +231,7 @@ body::before {
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  padding: 1rem 1.6rem;
+  padding: 1.15rem 1.6rem; /* keeps combined tap height ≥ ~48px */
   border: 1px solid transparent;
   border-radius: 3px;
   transition:
@@ -287,16 +289,24 @@ body::before {
 /* ---------------------------------------------------------------------------
    Navigation
 --------------------------------------------------------------------------- */
+/*
+  NOTE: This element must not contain fixed-position children unless
+  backdrop-filter is none. A non-none backdrop-filter (see .nav-scrolled)
+  turns an element into the containing block for fixed descendants, which
+  would collapse an inset-0 overlay into this 64px header box. The mobile
+  overlay is therefore portaled to <body> in Nav.tsx.
+*/
 .nav-shell {
   position: fixed;
   inset-inline: 0;
   top: 0;
   z-index: 50;
   border-bottom: 1px solid transparent;
+  /* background/border only — no backdrop-filter transition: blur is applied
+     instantly on scroll-state change instead of being animated per frame */
   transition:
     background 0.35s ease,
-    border-color 0.35s ease,
-    backdrop-filter 0.35s ease;
+    border-color 0.35s ease;
 }
 .nav-scrolled {
   background: rgb(10 11 13 / 0.78);
@@ -337,7 +347,6 @@ body::before {
       opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
       transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
     transition-delay: var(--reveal-delay, 0ms);
-    will-change: opacity, transform;
   }
   .reveal.is-in {
     opacity: 1;

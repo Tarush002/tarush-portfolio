@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { LINKS, NAV_LINKS, SITE } from "../data/content";
 import { ArrowUpRight } from "./Icons";
 
@@ -7,6 +8,8 @@ export default function Nav() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("");
   const menuBtnRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const wasOpen = useRef(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -33,15 +36,41 @@ export default function Nav() {
     return () => io.disconnect();
   }, []);
 
-  /* modal behaviour for the mobile menu */
+  /* modal behaviour for the mobile menu: scroll lock, Esc, simple focus trap,
+     and focus returned to the toggle on close (only after a real open) */
   useEffect(() => {
     if (!open) {
-      menuBtnRef.current?.focus({ preventScroll: true });
+      if (wasOpen.current) {
+        wasOpen.current = false;
+        menuBtnRef.current?.focus({ preventScroll: true });
+      }
       return;
     }
+    wasOpen.current = true;
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (e.key !== "Tab" || !menuRef.current) return;
+      const focusables = menuRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const current = document.activeElement;
+      const inside = menuRef.current.contains(current);
+      if (e.shiftKey && (!inside || current === first)) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (!inside || current === last)) {
+        e.preventDefault();
+        first.focus();
+      }
     };
+
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
     return () => {
@@ -50,7 +79,13 @@ export default function Nav() {
     };
   }, [open]);
 
-  const close = () => setOpen(false);
+  /* clear the scroll lock synchronously (the effect cleanup runs too late for
+     the default anchor action) so a link tap navigates instead of being
+     swallowed while the viewport is still locked */
+  const close = () => {
+    document.body.style.overflow = "";
+    setOpen(false);
+  };
 
   return (
     <header className={`nav-shell ${scrolled ? "nav-scrolled" : ""}`}>
@@ -70,6 +105,7 @@ export default function Nav() {
               key={link.href}
               href={link.href}
               className={`nav-link ${active === link.href.slice(1) ? "nav-active" : ""}`}
+              aria-current={active === link.href.slice(1) ? "true" : undefined}
             >
               {link.label}
             </a>
@@ -109,55 +145,64 @@ export default function Nav() {
         </button>
       </div>
 
-      {open && (
-        <div
-          id="mobile-menu"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Site menu"
-          className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-bg/97 backdrop-blur-xl"
-        >
-          <div className="site-container flex h-16 items-center justify-between">
-            <span className="flex items-center gap-3 font-mono text-[0.78rem] font-semibold tracking-[0.28em] text-ink">
-              <span className="block h-[7px] w-[7px] bg-accent" aria-hidden="true" />
-              {SITE.wordmark}
-            </span>
-          </div>
+      {/*
+        Overlay lives at <body> level (stacking order: grain 80 > skip-link 100 >
+        header 50 > overlay 40 > page). It must not be a DOM child of this
+        header: when .nav-scrolled applies backdrop-filter, the header becomes
+        the containing block for fixed descendants and an inset-0 overlay
+        collapses to the 64px header box. Portaling escapes that entirely. */}
+      {open &&
+        createPortal(
+          <div
+            ref={menuRef}
+            id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
+            className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-bg/97 pt-16 backdrop-blur-xl"
+          >
+            {/* pt-16 donates its row to the real header, which paints above
+                the overlay — so the ☰→✕ toggle (header, z-50) stays visible
+                and clickable. The duplicate wordmark row is therefore gone. */}
 
-          <nav className="site-container flex flex-1 flex-col justify-center gap-2 pb-16" aria-label="Mobile">
-            {NAV_LINKS.map((link, i) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={close}
-                className="flex items-baseline gap-5 border-b border-line py-5 font-sans text-4xl font-medium tracking-tight text-ink transition-colors hover:text-accent"
-              >
-                <span className="font-mono text-xs text-faint" aria-hidden="true">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                {link.label}
-              </a>
-            ))}
-
-            <div className="mt-10 grid gap-4">
-              {[
-                { label: "GITHUB", href: LINKS.github },
-                { label: "LINKEDIN", href: LINKS.linkedin },
-              ].map((l) => (
+            <nav
+              className="site-container flex flex-1 flex-col justify-center gap-2 pb-16"
+              aria-label="Mobile"
+            >
+              {NAV_LINKS.map((link, i) => (
                 <a
-                  key={l.label}
-                  href={l.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-between font-mono text-[0.72rem] font-medium tracking-[0.2em] text-dim transition-colors hover:text-accent"
+                  key={link.href}
+                  href={link.href}
+                  onClick={close}
+                  className="flex items-baseline gap-5 border-b border-line py-5 font-sans text-4xl font-medium tracking-tight text-ink transition-colors hover:text-accent"
                 >
-                  {l.label} <ArrowUpRight />
+                  <span className="font-mono text-xs text-faint" aria-hidden="true">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  {link.label}
                 </a>
               ))}
-            </div>
-          </nav>
-        </div>
-      )}
+
+              <div className="mt-10 grid gap-4">
+                {[
+                  { label: "GITHUB", href: LINKS.github },
+                  { label: "LINKEDIN", href: LINKS.linkedin },
+                ].map((l) => (
+                  <a
+                    key={l.label}
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between font-mono text-[0.72rem] font-medium tracking-[0.2em] text-dim transition-colors hover:text-accent"
+                  >
+                    {l.label} <ArrowUpRight />
+                  </a>
+                ))}
+              </div>
+            </nav>
+          </div>,
+          document.body,
+        )}
     </header>
   );
 }

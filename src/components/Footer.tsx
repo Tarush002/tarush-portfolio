@@ -12,7 +12,7 @@ export default function Footer() {
         <div className="flex items-center gap-8">
           <a
             href="#top"
-            className="font-mono text-[0.66rem] tracking-[0.2em] text-faint transition-colors hover:text-accent"
+            className="py-2 font-mono text-[0.66rem] tracking-[0.2em] text-faint transition-colors hover:text-accent"
           >
             BACK TO TOP ↑
           </a>

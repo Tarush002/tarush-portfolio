@@ -48,7 +48,7 @@ function ProjectRow({ project, flip }: RowProps) {
               href={project.cta.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="u-link inline-flex items-center gap-2 font-mono text-[0.72rem] font-semibold tracking-[0.2em] text-ink transition-colors hover:text-accent"
+              className="u-link inline-flex items-center gap-2 py-2 font-mono text-[0.72rem] font-semibold tracking-[0.2em] text-ink transition-colors hover:text-accent"
             >
               {project.cta.label} <ArrowUpRight />
             </a>

@@ -23,17 +23,18 @@ export default function Education() {
                 </p>
                 <div className="md:col-span-7">
                   <p className="text-xl font-medium tracking-tight text-ink md:text-2xl">
-                    {ed.title}{" "}
-                    <span className="text-dim">— {ed.field}</span>
+                    {ed.title} <span className="text-dim">— {ed.field}</span>
                   </p>
                   <p className="mt-1.5 text-sm text-dim">{ed.school}</p>
-                  <p className="font-mono text-[0.62rem] tracking-[0.16em] text-faint">{ed.detail}</p>
+                  {ed.detail ? (
+                    <p className="mt-1 font-mono text-[0.62rem] tracking-[0.16em] text-faint">
+                      {ed.detail}
+                    </p>
+                  ) : null}
                 </div>
                 <div className="flex md:col-span-2 md:justify-end">
-                  <span
-                    className={`chip ${ed.period === "IN PROGRESS" ? "" : "chip-muted"} border-current text-current`}
-                  >
-                    {ed.period}
+                  <span className={`chip ${ed.period === "IN PROGRESS" ? "chip-accent" : ""}`}>
+                    {ed.level}
                   </span>
                 </div>
               </div>

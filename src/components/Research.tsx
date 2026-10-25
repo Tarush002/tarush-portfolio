@@ -61,7 +61,7 @@ export default function Research() {
                     href={LINKS.doi}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="u-link inline-flex items-center gap-1 text-accent"
+                    className="u-link inline-flex items-center gap-1 py-1.5 text-accent"
                   >
                     {PUBLICATION.meta.doi} <ArrowUpRight />
                   </a>

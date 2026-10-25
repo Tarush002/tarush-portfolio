@@ -34,11 +34,12 @@ export default function About() {
             </Reveal>
             <Reveal delay={100}>
               <p className="mt-7 max-w-xl leading-relaxed text-dim">
-                I read for MCA Cyber Security at {EDUCATION[0].school} after a BCA at the
-                University of Lucknow (2022–2025), and spend the rest of the time on open-source
-                research: OSINT methodology, threat analysis, and small tools — like AI-SOC —
-                built to turn raw signals into scored, explainable findings. A published book
-                chapter on AI-enabled crime sits on the shelf as evidence the curiosity goes
+                I am currently pursuing a Master of Computer Applications (MCA) in Cyber Security
+                at {EDUCATION[0].school}, after completing a Bachelor of Computer Applications
+                (BCA) at the University of Lucknow (2022–2025). The rest of my time goes into
+                open-source research: OSINT methodology, threat analysis, and small tools — like
+                AI-SOC — built to turn raw signals into scored, explainable findings. A published
+                book chapter on AI-enabled crime sits on the shelf as evidence the curiosity goes
                 somewhere.
               </p>
             </Reveal>
