@@ -1,0 +1,514 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Design tokens
+--------------------------------------------------------------------------- */
+@theme {
+  --color-bg: #0a0b0d;
+  --color-panel: #0e1013;
+  --color-panel-2: #12151a;
+  --color-ink: #e8e6e1;
+  --color-dim: #9b9993;
+  --color-faint: #7a7974;
+  --color-accent: #c7f36b;
+  --color-steel: #8ba7c7;
+
+  --color-line: rgb(232 230 225 / 0.08);
+  --color-line-strong: rgb(232 230 225 / 0.18);
+
+  --font-sans: "Space Grotesk Variable", "Space Grotesk", system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", Consolas, monospace;
+  --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+/* subtle film grain — static, sits above everything, never intercepts input */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+}
+
+/* atmospheric vignette */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(1100px 620px at 82% -12%, rgb(199 243 107 / 0.045), transparent 65%),
+    radial-gradient(900px 700px at -10% 105%, rgb(139 167 199 / 0.05), transparent 60%);
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #0a0b0d;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0b0d;
+}
+::-webkit-scrollbar-thumb {
+  background: #23262b;
+  border: 2px solid #0a0b0d;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #31353c;
+}
+
+/* ---------------------------------------------------------------------------
+   Layout
+--------------------------------------------------------------------------- */
+.site-container {
+  width: min(1240px, 100% - 2.5rem);
+  margin-inline: auto;
+}
+@media (min-width: 768px) {
+  .site-container {
+    width: min(1240px, 100% - 5rem);
+  }
+}
+
+.section {
+  padding-block: clamp(5.5rem, 11vw, 9.5rem);
+  border-top: 1px solid var(--color-line);
+  scroll-margin-top: 4.5rem;
+}
+
+.rule {
+  height: 1px;
+  background: var(--color-line);
+  border: 0;
+}
+
+/* faint architectural grid, masked so it dissolves instead of repeating forever */
+.grid-lines {
+  background-image:
+    linear-gradient(var(--color-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
+  background-size: 76px 76px;
+  mask-image: radial-gradient(ellipse 75% 68% at 55% 38%, black 25%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 68% at 55% 38%, black 25%, transparent 78%);
+}
+
+/* ---------------------------------------------------------------------------
+   Typography
+--------------------------------------------------------------------------- */
+.display-1 {
+  font-family: var(--font-sans);
+  font-weight: 550;
+  font-size: clamp(2.85rem, 7vw, 6.2rem);
+  line-height: 0.99;
+  letter-spacing: -0.035em;
+}
+
+.display-2 {
+  font-family: var(--font-sans);
+  font-weight: 550;
+  font-size: clamp(2.1rem, 4.4vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.serif-it {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.07em;
+  letter-spacing: -0.008em;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
+.eyebrow::before {
+  content: "";
+  width: 1.6rem;
+  height: 1px;
+  background: var(--color-accent);
+  opacity: 0.85;
+  flex: none;
+}
+
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
+
+.big-numeral {
+  font-family: var(--font-mono);
+  font-weight: 200;
+  font-size: clamp(3.4rem, 7vw, 5.6rem);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(232 230 225 / 0.22);
+  letter-spacing: -0.04em;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.32rem 0.62rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 3px;
+  color: var(--color-dim);
+  white-space: nowrap;
+}
+
+.chip-accent {
+  border-color: rgb(199 243 107 / 0.35);
+  color: var(--color-accent);
+}
+
+.chip-muted {
+  border-style: dashed;
+  border-color: rgb(232 230 225 / 0.16);
+}
+
+/* ---------------------------------------------------------------------------
+   Buttons & links
+--------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 1rem 1.6rem;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  transition:
+    transform 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+.btn:hover {
+  transform: translateY(-2px);
+}
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-solid {
+  background: var(--color-accent);
+  color: #0a0b0d;
+}
+.btn-solid:hover {
+  background: #dcff9e;
+}
+
+.btn-ghost {
+  border-color: var(--color-line-strong);
+  color: var(--color-ink);
+}
+.btn-ghost:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* animated underline for inline links */
+.u-link {
+  position: relative;
+}
+.u-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.u-link:hover::after,
+.u-link:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ---------------------------------------------------------------------------
+   Navigation
+--------------------------------------------------------------------------- */
+.nav-shell {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid transparent;
+  transition:
+    background 0.35s ease,
+    border-color 0.35s ease,
+    backdrop-filter 0.35s ease;
+}
+.nav-scrolled {
+  background: rgb(10 11 13 / 0.78);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-bottom-color: var(--color-line);
+}
+
+.nav-link {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+  transition: color 0.25s ease;
+}
+.nav-link:hover {
+  color: var(--color-ink);
+}
+.nav-active {
+  color: var(--color-accent);
+}
+
+/* ---------------------------------------------------------------------------
+   Reveal-on-scroll (motion only when the user has not opted out)
+--------------------------------------------------------------------------- */
+.reveal {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition:
+      opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  .reveal.is-in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* status dot */
+.pulse-dot {
+  animation: pulse-ring 2.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgb(199 243 107 / 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgb(199 243 107 / 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgb(199 243 107 / 0);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Hero visual (SVG) — topology contours, network nodes, scanning sweep
+--------------------------------------------------------------------------- */
+.anim-spin-slow {
+  animation: spin 110s linear infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.anim-spin-rev {
+  animation: spin 75s linear infinite reverse;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.anim-pulse-node {
+  animation: node-pulse 4.5s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+@keyframes node-pulse {
+  0%,
+  100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(2);
+  }
+}
+
+.anim-scan {
+  animation: scan-x 10s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+@keyframes scan-x {
+  from {
+    transform: translateX(210px);
+  }
+  to {
+    transform: translateX(690px);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Project visuals
+--------------------------------------------------------------------------- */
+
+/* — spatial planes — */
+.plane-stage {
+  perspective: 950px;
+}
+.plane-wrap {
+  transform-style: preserve-3d;
+}
+.plane {
+  position: absolute;
+  border: 1px solid rgb(139 167 199 / 0.3);
+  background-color: rgb(14 16 19 / 0.6);
+  background-image: radial-gradient(rgb(232 230 225 / 0.16) 1px, transparent 1px);
+  background-size: 20px 20px;
+  box-shadow: 0 24px 60px rgb(0 0 0 / 0.45);
+  transform-style: preserve-3d;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .plane {
+    animation: plane-float 7s ease-in-out infinite;
+  }
+  .plane-2 .plane {
+    animation-delay: -2.2s;
+  }
+  .plane-3 .plane {
+    animation-delay: -4.4s;
+  }
+}
+@keyframes plane-float {
+  0%,
+  100% {
+    transform: translateZ(8px);
+  }
+  50% {
+    transform: translateZ(-16px);
+  }
+}
+
+/* — dossier (planned OSINT workspace) — */
+.dossier-card {
+  border: 1px dashed rgb(232 230 225 / 0.2);
+  border-radius: 4px;
+  background: rgb(232 230 225 / 0.015);
+}
+.dossier-line {
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgb(232 230 225 / 0.14) 0 8px,
+    transparent 8px 14px
+  );
+}
+.stamp {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+  border: 1px solid rgb(232 230 225 / 0.16);
+  border-radius: 3px;
+  padding: 0.4rem 0.7rem 0.4rem 0.95rem;
+}
+
+/* skip to content — invisible until focused */
+.skip-link {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 100;
+  transform: translateY(-300%);
+  background: var(--color-accent);
+  color: #0a0b0d;
+  padding: 0.7rem 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  border-radius: 3px;
+  transition: transform 0.3s ease;
+}
+.skip-link:focus {
+  transform: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion — neutralise everything decorated above
+--------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow" cx="78%" cy="30%" r="55%">
+      <stop offset="0%" stop-color="#C7F36B" stop-opacity="0.08" />
+      <stop offset="60%" stop-color="#C7F36B" stop-opacity="0.02" />
+      <stop offset="100%" stop-color="#C7F36B" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#0A0B0D" />
+  <rect width="1200" height="630" fill="url(#glow)" />
+  <!-- fine grid -->
+  <g stroke="#E8E6E1" stroke-opacity="0.05">
+    <path d="M0 120h1200M0 260h1200M0 400h1200M0 540h1200" />
+    <path d="M120 0v630M400 0v630M680 0v630M960 0v630" />
+  </g>
+  <!-- concentric contour motif -->
+  <g fill="none" stroke="#E8E6E1" stroke-opacity="0.16">
+    <circle cx="960" cy="300" r="70" />
+    <circle cx="960" cy="300" r="120" />
+    <circle cx="960" cy="300" r="175" />
+    <circle cx="960" cy="300" r="235" />
+    <circle cx="972" cy="292" r="300" />
+  </g>
+  <circle cx="960" cy="300" r="152" fill="none" stroke="#C7F36B" stroke-opacity="0.55" stroke-dasharray="4 9" />
+  <circle cx="960" cy="300" r="4" fill="#C7F36B" />
+  <!-- crosshair tick -->
+  <path d="M852 300h32M1036 300h32M960 192v32M960 376v32" stroke="#E8E6E1" stroke-opacity="0.35" />
+  <!-- wordmark -->
+  <text x="110" y="118" font-family="'JetBrains Mono', Consolas, monospace" font-size="17" letter-spacing="6" fill="#C7F36B">TARUSH SINGH</text>
+  <text x="110" y="150" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" letter-spacing="4" fill="#9B9993">INDEPENDENT RESEARCH · CYBERSECURITY · AI</text>
+  <!-- headline -->
+  <text x="110" y="296" font-family="Futura, 'Segoe UI', system-ui, sans-serif" font-size="64" fill="#E8E6E1">Understanding threats.</text>
+  <text x="110" y="380" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="64" fill="#E8E6E1">Investigating what others miss.</text>
+  <!-- footer line -->
+  <path d="M110 520h420" stroke="#E8E6E1" stroke-opacity="0.2" />
+  <text x="110" y="556" font-family="'JetBrains Mono', Consolas, monospace" font-size="13" letter-spacing="3" fill="#9B9993">RESEARCHING THE DIGITAL WORLD</text>
+</svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="10" fill="#0A0B0D" />
+  <rect x="1.5" y="1.5" width="61" height="61" rx="8.5" fill="none" stroke="#E8E6E1" stroke-opacity="0.18" />
+  <!-- crosshair ticks -->
+  <path d="M32 8v6M32 50v6M8 32h6M50 32h6" stroke="#E8E6E1" stroke-opacity="0.35" stroke-width="1.5" />
+  <circle cx="32" cy="32" r="18" fill="none" stroke="#C7F36B" stroke-opacity="0.5" stroke-width="1" stroke-dasharray="3 5" />
+  <text
+    x="32"
+    y="39.5"
+    text-anchor="middle"
+    font-family="'JetBrains Mono', 'Courier New', monospace"
+    font-size="17"
+    font-weight="600"
+    letter-spacing="1"
+    fill="#C7F36B"
+  >TS</text>
+</svg>
